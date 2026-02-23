@@ -24,7 +24,7 @@ body {
 
 /* User Card */
 .user-card {
-  color: white;
+  color: rgb(0, 0, 0);
   position: relative;
   border-bottom: 1px solid rgb(100, 100, 100);
   width: 380px;
