@@ -8,7 +8,24 @@ export const ChatContextProvider = ({ children, user }) => {
   const [userChats, setUserChats] = useState(null);
   const [isUserChatsLoading, setUserChatsLoading] = useState(false);
   const [UserChatsError, setUserChatsError] = useState(null);
+  const [potentialChats, setPotentialChats] = useState([]);
+  useEffect(() => {
+    const getUsers = async () => {
+      if (!user?._id) return;
 
+      const response = await getRequest(`${baseUrl}/users`);
+
+      if (response?.error) {
+        return console.log("Error Fetching Users", response);
+      }
+
+      const pChats = response.filter((u) => u._id !== user._id);
+
+      setPotentialChats(pChats);
+    };
+
+    getUsers();
+  }, [user]);
   useEffect(() => {
     const getUserChats = async () => {
       if (!user?._id) return;
@@ -36,6 +53,7 @@ export const ChatContextProvider = ({ children, user }) => {
         userChats,
         isUserChatsLoading,
         UserChatsError,
+        potentialChats, // ✅ add this
       }}
     >
       {children}
