@@ -1,12 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
 
+/* ================= BODY ================= */
 body {
-  font-family: "Nunito", sans-serif;
+  font-family:
+    "Nunito",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+
   background: rgb(40, 40, 40);
   color: white;
+  margin: 0;
+  padding: 0;
 }
 
-/* All users */
+/* ================= ALL USERS ================= */
 .all-users {
   display: flex;
   margin-bottom: 1rem;
@@ -22,7 +38,7 @@ body {
   position: relative;
 }
 
-/* User Card */
+/* ================= USER CARD ================= */
 .user-card {
   color: rgb(0, 0, 0);
   position: relative;
@@ -44,20 +60,16 @@ body {
   color: rgb(180, 180, 180);
 }
 
+/* ================= ONLINE DOT ================= */
 .user-online {
-  display: inline-block;
-  height: 12px;
-  width: 12px;
+  width: 10px;
+  height: 10px;
+  background-color: #28a745;
   border-radius: 50%;
-  background: rgb(0, 219, 0);
   position: absolute;
-  top: -3px;
-  right: -3px;
-  z-index: 2;
-  color: black;
 }
 
-/* Chat Box */
+/* ================= CHAT BOX ================= */
 .chat-box {
   max-height: calc(100vh - 10rem);
   overflow-y: auto;
@@ -69,17 +81,16 @@ body {
   height: 85vh;
 }
 
-/* Chat Header */
+/* ================= CHAT HEADER ================= */
 .chat-header {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
-  color: white;
   background: rgb(30, 30, 30);
 }
 
-/* Messages */
+/* ================= MESSAGES ================= */
 .messages {
   max-height: calc(100vh - 15rem);
   overflow-y: auto;
@@ -87,7 +98,6 @@ body {
 }
 
 .message {
-  color: white;
   background: #282828;
   padding: 0.75rem;
   border-radius: 5px;
@@ -95,7 +105,6 @@ body {
 }
 
 .message.self {
-  color: white;
   background: #00bd9b;
 }
 
@@ -105,12 +114,13 @@ body {
   font-weight: 400;
 }
 
-/* Chat Input  */
+/* ================= CHAT INPUT ================= */
 .chat-input {
   width: 100%;
   background: rgb(30, 30, 30);
   padding: 1rem;
 }
+
 .send-btn {
   border: none;
   background: rgba(72, 112, 223, 1);
@@ -118,15 +128,15 @@ body {
   height: 40px;
   width: 40px;
   border-radius: 50%;
+  cursor: pointer;
 }
 
-/* Notification */
+/* ================= NOTIFICATIONS ================= */
 .notifications {
   position: relative;
 }
 
 .notifications-icon {
-  color: white;
   cursor: pointer;
   position: relative;
   margin-right: 1rem;
@@ -142,32 +152,18 @@ body {
     rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
     rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   background: #181d31;
-  color: rgb(26, 1, 1);
   z-index: 5;
 }
 
 .notifications-header {
   padding: 1rem;
-  padding-bottom: 0;
   display: flex;
   justify-content: space-between;
-}
-
-.notifications-box h3 {
-  font-weight: 700;
-  font-size: 20px;
-}
-
-.mark-as-read {
-  cursor: pointer;
-  font-weight: 700;
-  opacity: 0.8;
 }
 
 .notification {
   font-size: 14px;
   margin: 1rem 0;
-  padding-bottom: 0.2rem;
   border-bottom: 1px solid rgb(207, 207, 207);
   display: flex;
   flex-direction: column;
@@ -199,31 +195,29 @@ body {
   top: -10px;
   right: -15px;
 }
-
-.this-user-notification {
-  width: 22px;
-  height: 22px;
-  background-color: #4e73df;
-  color: white;
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 12px;
-  font-weight: 600;
+/* ================= LOGO IMAGE ================= */
+.logo-img {
+  height: 40px; /* adjust if needed */
+  width: auto;
+  object-fit: contain;
 }
 .user-avatar-img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
+/* Fix emoji input width */
+.emoji-input-wrapper {
+  flex: 1;
+}
 
-.user-online {
-  width: 10px;
-  height: 10px;
-  background-color: #28a745;
-  border-radius: 50%;
-  position: absolute;
+/* Fix InputEmoji internal styling */
+.emoji-input-wrapper .react-input-emoji--container {
+  border-radius: 6px;
+  height: 40px !important;
+}
+
+/* Prevent it from becoming too tall */
+.emoji-input-wrapper .react-input-emoji--input {
+  min-height: 40px !important;
 }

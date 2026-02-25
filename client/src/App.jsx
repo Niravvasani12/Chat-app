@@ -9,7 +9,7 @@ import { Container } from "react-bootstrap";
 import "./index.css";
 import NavBar from "./components/Navbar";
 import { AuthContext } from "./context/AuthContext";
-import { ChatContextProvider } from "./context/chatContext";
+import ChatContextProvider from "./context/ChatContextProvider";
 
 function App() {
   const { user } = useContext(AuthContext);
