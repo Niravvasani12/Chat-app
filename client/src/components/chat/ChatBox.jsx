@@ -40,13 +40,6 @@ const ChatBox = () => {
 
       {/* Messages */}
       <Stack gap={3} className="messages">
-        {/* {(!messages || messages.length === 0) && (
-          <Stack className="message align-self-start flex-grow-0">
-            <span>Hello 👋</span>
-            <span className="message-footer">{moment().calendar()}</span>
-          </Stack>
-        )} */}
-
         {messages?.map((message) => (
           <Stack
             key={message._id}
