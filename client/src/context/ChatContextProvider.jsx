@@ -10,7 +10,8 @@ const ChatContextProvider = ({ children, user }) => {
   const [userChats, setUserChats] = useState([]);
   const [isUserChatsLoading, setUserChatsLoading] = useState(false);
   const [userChatsError, setUserChatsError] = useState(null);
-  const [potentialChats, setPotentialChats] = useState([]);
+
+  const [allUsers, setAllUsers] = useState([]); // ✅ NEW
   const [currentChat, setCurrentChat] = useState(null);
 
   const [messages, setMessages] = useState([]);
@@ -39,6 +40,18 @@ const ChatContextProvider = ({ children, user }) => {
     };
   }, [user?._id]);
 
+  /* ================= SOCKET SEND MESSAGE ================= */
+  useEffect(() => {
+    if (!newMessage || !currentChat) return;
+
+    const recipientId = currentChat?.members?.find((id) => id !== user?._id);
+
+    socket.emit("sendMessage", {
+      ...newMessage,
+      recipientId,
+    });
+  }, [newMessage, currentChat, user]);
+
   /* ================= GET USER CHATS ================= */
   useEffect(() => {
     const getUserChats = async () => {
@@ -57,6 +70,22 @@ const ChatContextProvider = ({ children, user }) => {
     };
 
     getUserChats();
+  }, [user]);
+
+  /* ================= GET ALL USERS ================= */
+  useEffect(() => {
+    const getUsers = async () => {
+      if (!user?._id) return;
+
+      const response = await getRequest(`${baseUrl}/users`);
+      if (response?.error) return;
+
+      const filteredUsers = response.filter((u) => u._id !== user._id);
+
+      setAllUsers(filteredUsers);
+    };
+
+    getUsers();
   }, [user]);
 
   /* ================= GET MESSAGES ================= */
@@ -127,31 +156,8 @@ const ChatContextProvider = ({ children, user }) => {
     if (response?.error) return;
 
     setUserChats((prev) => [...prev, response]);
+    setCurrentChat(response); // ✅ auto open chat
   }, []);
-
-  /* ================= GET USERS ================= */
-  useEffect(() => {
-    const getUsers = async () => {
-      if (!user?._id) return;
-
-      const response = await getRequest(`${baseUrl}/users`);
-      if (response?.error) return;
-
-      const pChats = response.filter((u) => {
-        if (u._id === user._id) return false;
-
-        const isChatCreated = userChats?.some((chat) =>
-          chat.members.includes(u._id),
-        );
-
-        return !isChatCreated;
-      });
-
-      setPotentialChats(pChats);
-    };
-
-    getUsers();
-  }, [user, userChats]);
 
   return (
     <ChatContext.Provider
@@ -159,7 +165,7 @@ const ChatContextProvider = ({ children, user }) => {
         userChats,
         isUserChatsLoading,
         userChatsError,
-        potentialChats,
+        allUsers, // ✅ now showing all users
         createChat,
         updateCurrentChat,
         messages,
