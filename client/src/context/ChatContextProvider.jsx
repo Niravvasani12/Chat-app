@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import { io } from "socket.io-client";
 import { ChatContext } from "./ChatContext";
 import { baseUrl, getRequest, postRequest } from "../utils/service";
+
+/* ✅ Create socket ONCE outside component */
+const socket = io("http://localhost:3000");
 
 const ChatContextProvider = ({ children, user }) => {
   const [userChats, setUserChats] = useState([]);
@@ -15,7 +19,27 @@ const ChatContextProvider = ({ children, user }) => {
 
   const [sendTextMessageError, setSendTextMessageError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
-  // ------------------ GET USER CHATS ------------------
+
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  /* ================= SOCKET ONLINE USERS ================= */
+  useEffect(() => {
+    if (!user?._id) return;
+
+    socket.emit("addNewUser", user._id);
+
+    const handleOnlineUsers = (res) => {
+      setOnlineUsers(res);
+    };
+
+    socket.on("getOnlineUsers", handleOnlineUsers);
+
+    return () => {
+      socket.off("getOnlineUsers", handleOnlineUsers);
+    };
+  }, [user?._id]);
+
+  /* ================= GET USER CHATS ================= */
   useEffect(() => {
     const getUserChats = async () => {
       if (!user?._id) return;
@@ -27,9 +51,7 @@ const ChatContextProvider = ({ children, user }) => {
 
       setUserChatsLoading(false);
 
-      if (response?.error) {
-        return setUserChatsError(response);
-      }
+      if (response?.error) return setUserChatsError(response);
 
       setUserChats(response);
     };
@@ -37,7 +59,7 @@ const ChatContextProvider = ({ children, user }) => {
     getUserChats();
   }, [user]);
 
-  // ------------------ GET MESSAGES ------------------
+  /* ================= GET MESSAGES ================= */
   useEffect(() => {
     const getMessages = async () => {
       if (!currentChat?._id) {
@@ -65,11 +87,11 @@ const ChatContextProvider = ({ children, user }) => {
     getMessages();
   }, [currentChat]);
 
+  /* ================= SEND MESSAGE ================= */
   const sendTextMessage = useCallback(
     async (textMessage, sender, currentChatId, setTextMessage) => {
-      if (!textMessage) {
-        return console.log("You Must Type Something");
-      }
+      if (!textMessage) return;
+
       const response = await postRequest(
         `${baseUrl}/messages`,
         JSON.stringify({
@@ -78,6 +100,7 @@ const ChatContextProvider = ({ children, user }) => {
           text: textMessage,
         }),
       );
+
       if (response?.error) {
         return setSendTextMessageError(response);
       }
@@ -89,33 +112,30 @@ const ChatContextProvider = ({ children, user }) => {
     [],
   );
 
+  /* ================= UPDATE CURRENT CHAT ================= */
   const updateCurrentChat = useCallback((chat) => {
     setCurrentChat(chat);
   }, []);
 
+  /* ================= CREATE CHAT ================= */
   const createChat = useCallback(async (firstId, secondId) => {
     const response = await postRequest(
       `${baseUrl}/chats`,
       JSON.stringify({ firstId, secondId }),
     );
 
-    if (response?.error) {
-      return console.log("Error creating chat ", response);
-    }
+    if (response?.error) return;
 
     setUserChats((prev) => [...prev, response]);
   }, []);
 
-  // ------------------ GET USERS ------------------
+  /* ================= GET USERS ================= */
   useEffect(() => {
     const getUsers = async () => {
       if (!user?._id) return;
 
       const response = await getRequest(`${baseUrl}/users`);
-
-      if (response?.error) {
-        return console.log("Error fetching users:", response);
-      }
+      if (response?.error) return;
 
       const pChats = response.filter((u) => {
         if (u._id === user._id) return false;
@@ -149,6 +169,7 @@ const ChatContextProvider = ({ children, user }) => {
         sendTextMessage,
         sendTextMessageError,
         newMessage,
+        onlineUsers,
       }}
     >
       {children}

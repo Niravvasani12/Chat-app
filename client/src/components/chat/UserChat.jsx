@@ -1,9 +1,16 @@
 import { Stack } from "react-bootstrap";
 import { useFetchRecipient } from "../../hooks/useFetchRecipient";
+import { useContext } from "react";
+import { ChatContext } from "../../context/ChatContext";
 import avartar from "../../assets/avartar.svg";
 
 const UserChat = ({ chat, user }) => {
   const { recipientUser } = useFetchRecipient(chat, user);
+  const { onlineUsers } = useContext(ChatContext);
+
+  const isOnline = onlineUsers?.some(
+    (onlineUser) => onlineUser.userId === recipientUser?._id,
+  );
 
   return (
     <Stack
@@ -14,8 +21,10 @@ const UserChat = ({ chat, user }) => {
     >
       {/* LEFT SIDE */}
       <div className="d-flex align-items-center gap-2">
-        <div className="me-2">
+        <div className="me-2 position-relative">
           <img src={avartar} alt="avatar" className="user-avatar-img" />
+
+          {isOnline && <div className="user-online"></div>}
         </div>
 
         <div className="text-content">
@@ -30,7 +39,6 @@ const UserChat = ({ chat, user }) => {
       <div className="d-flex flex-column align-items-end">
         <div className="date small text-muted">12/12/2022</div>
         <div className="this-user-notification">2</div>
-        <div className="user-online"></div>
       </div>
     </Stack>
   );
