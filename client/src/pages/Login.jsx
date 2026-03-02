@@ -27,6 +27,7 @@ const Login = () => {
             <Form.Control
               type="email"
               placeholder="Email"
+              autoFocus
               onChange={(e) =>
                 updateLoginInfo({ ...loginInfo, email: e.target.value })
               }
