@@ -17,28 +17,55 @@ body {
     sans-serif;
 
   background: rgb(40, 40, 40);
-  color: white;
+  color: rgb(255, 255, 255);
   margin: 0;
   padding: 0;
 }
+/*?? ================= CHAT CARD HOVER ================= */
 
-/* ================= ALL USERS ================= */
-.all-users {
+/* Just I add Hovver when User Select that chat */
+.user-card {
+  transition: 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+}
+
+.user-card:hover {
+  background-color: #d3e9ca;
+  color: rgb(7, 1, 1);
+  border-radius: 20px;
+}
+
+.selected-chat {
+  background-color: #bad8eb;
+  color: white;
+  font-size: 15px;
+
+  border-radius: 10px;
+}
+
+.selected-chat .text,
+.selected-chat .date {
+  color: white !important;
+}
+/** ================= ALL USERS ================= */
+/* .all-users {
   display: flex;
   margin-bottom: 1rem;
 }
 
 .single-user {
-  background: rgb(0, 213, 255);
+  background: rgb(255, 149, 0);
   color: white;
   cursor: pointer;
   padding: 5px 7px;
   border-radius: 10px;
   margin-right: 0.5rem;
   position: relative;
-}
+} */
 
 /* ================= USER CARD ================= */
+
 .user-card {
   color: rgb(0, 0, 0);
   position: relative;
@@ -115,15 +142,6 @@ body {
   color: #ffffff;
 }
 
-/* .message {
-  background: #282828;
-  color: #f1f1f1;
-}
-
-.message.self {
-  background: #00bd9b;
-  color: #ffffff;
-} */
 .message-footer {
   font-size: 12px;
   align-self: flex-end;
@@ -196,7 +214,9 @@ body {
   font-size: 12px;
   color: #e0e0e0;
 }
-
+.user-card {
+  transition: 0.2s ease;
+}
 .notification-count {
   display: flex;
   background: #00bd9b;
